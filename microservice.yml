@@ -1,0 +1,226 @@
+omg: 1
+lifecycle:
+  startup:
+    command: ["zendesk"]
+info:
+  version: 1.0.0
+  title: Zendesk
+  description: This is a zendesk service
+  contact:
+    name: Rohit Shetty
+    url: https://github.com/ht68rohit
+    email: rohits@heaptrace.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+actions:
+  createUser:
+    help: Create user in zendesk.
+    http:
+      port: 3000
+      method: post
+      path: /createUser
+      contentType: application/json
+    arguments:
+      email:
+        type: string
+        in: requestBody
+        help: The user's primary email address.
+      name:
+        type: string
+        in: requestBody
+        required: true
+        help: The user's name
+      alias:
+        type: string
+        in: requestBody
+        help: An alias displayed to end users.
+      details:
+        type: string
+        in: requestBody
+        help: Any details you want to store about the user, such as an address
+      moderator:
+        type: boolean
+        in: requestBody
+        help: Designates whether the user has forum moderation capabilities
+      notes:
+        type: string
+        in: requestBody
+        help: Any notes you want to store about the user
+      onlyPrivateComments:
+        type: boolean
+        in: requestBody
+        help: true if the user can only create private comments
+      phone:
+        type: string
+        in: requestBody
+        help: The user's primary phone number.
+      restrictedAgent:
+        type: boolean
+        in: requestBody
+        help: If the agent has any restrictions; false for admins and unrestricted agents, true for other agents
+      signature:
+        type: string
+        in: requestBody
+        help: The user's signature. Only agents and admins can have signatures
+      suspended:
+        type: boolean
+        in: requestBody
+        help: If the agent is suspended. Tickets from suspended users are also suspended, and these users cannot sign in to the end user portal
+      ticketRestriction:
+        type: string
+        in: requestBody
+        help: Specifies which tickets the user has access to. Possible values are- "organization", "groups", "assigned", "requested", null
+      userFields:
+        type: map
+        in: requestBody
+        help: Values of custom fields in the user's profile
+      verified:
+        type: boolean
+        in: requestBody
+        help: The user's primary identity is verified or not.
+    output:
+      type: map
+      contentType: application/json
+  createTicket:
+    help: Create ticket in zendesk.
+    http:
+      port: 3000
+      method: post
+      path: /createTicket
+      contentType: application/json
+    arguments:
+      externalId:
+        type: string
+        in: requestBody
+        help: An id you can use to link Zendesk Support tickets to local records.
+      type:
+        type: string
+        in: requestBody
+        help: The type of this ticket. Possible values- "problem", "incident", "question" or "task".
+      subject:
+        type: string
+        in: requestBody
+        help: The value of the subject field for this ticket.
+      rawSubject:
+        type: string
+        in: requestBody
+        help: The dynamic content placeholder, if present, or the "subject" value
+      description:
+        type: string
+        in: requestBody
+        help: The description for the ticket.
+      priority:
+        type: string
+        in: requestBody
+        help: The urgency with which the ticket should be addressed. Possible values- "urgent", "high", "normal", "low"
+      status:
+        type: string
+        in: requestBody
+        help: The state of the ticket. Possible values- "new", "open", "pending", "hold", "solved", "closed".
+      recipient:
+        type: string
+        in: requestBody
+        help: The original recipient e-mail address of the ticket.
+      requesterId:
+        type: int
+        in: requestBody
+        required: true
+        help: The user who requested this ticket.
+      submitterId:
+        type: int
+        in: requestBody
+        help: The user who submitted the ticket. The submitter always becomes the author of the first comment on the ticket.
+      organizationId:
+        type: int
+        in: requestBody
+        help: The organization of the requester. You can only specify the ID of an organization associated with the requester.
+      groupId:
+        type: int
+        in: requestBody
+        help: The group this ticket is assigned to.
+      forumTopicId:
+        type: int
+        in: requestBody
+        help: The topic this ticket originated from, if any.
+      problemId:
+        type: int
+        in: requestBody
+        help: For tickets of type "incident", the ID of the problem the incident is linked to.
+      dueAt:
+        type: string
+        in: requestBody
+        help: If this is a ticket of type "task" it has a due date. Due date format uses ISO 8601 format.
+      brandId:
+        type: int
+        in: requestBody
+        help: Enterprise only. The id of the brand this ticket is associated with.
+      ticketFormId:
+        type: int
+        in: requestBody
+        help: Enterprise only. The id of the ticket form to render for the ticket.
+      followupSourceId:
+        type: int
+        in: requestBody
+        help: The ids of agents currently following the ticket.
+    output:
+      type: map
+      contentType: application/json
+  listTicket:
+    help: List all tickets from zendesk account.
+    http:
+      port: 3000
+      method: post
+      path: /listTicket
+      contentType: application/json
+    arguments:
+      sortBy:
+        type: string
+        in: requestBody
+        help: Possible values are assignee, assignee.name, created_at, group, id, locale, requester, requester.name, status, subject, updated_at.
+      sortOrder:
+        type: string
+        in: requestBody
+        help: One of asc, desc. Defaults to asc.
+    output:
+      type: map
+      contentType: application/json
+  deleteTicket:
+    help: List all tickets from zendesk account.
+    http:
+      port: 3000
+      method: post
+      path: /deleteTicket
+      contentType: application/json
+    arguments:
+      ticketId:
+        type: int
+        in: requestBody
+        required: true
+        help: The user's primary email address.
+    output:
+      type: map
+      contentType: application/json
+      properties:
+        success:
+          type: boolean
+          help: Return true if ticket found and deleted successfully. 
+        message:
+          type: string
+          help: Return successfully deleted message. 
+        statusCode:
+          type: int
+          help: Return http status code. 
+environment:
+  DOMAIN_NAME:
+    type: string
+    required: true
+    help: The domain name of zendesk account.
+  EMAIL:
+    type: string
+    required: true
+    help: Email address of account.
+  API_TOKEN:
+    type: string
+    required: true
+    help: API Token of zendesk service.
