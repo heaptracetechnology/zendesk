@@ -4,7 +4,6 @@
 [![Build Status](https://travis-ci.com/heaptracetechnology/zendesk.svg?branch=master)](https://travis-ci.com/heaptracetechnology/zendesk)
 [![codecov](https://codecov.io/gh/heaptracetechnology/zendesk/branch/master/graph/badge.svg)](https://codecov.io/gh/heaptracetechnology/zendesk)
 
-
 An OMG service for zendesk, it offers one of the most efficient and user-friendly Help Desk features available. It allows companies to design their own online Help Center format to ensure that it matches their unique brand message and customers' needs.
 
 ## Direct usage in [Storyscript](https://storyscript.io/):
@@ -12,18 +11,23 @@ An OMG service for zendesk, it offers one of the most efficient and user-friendl
 ##### Create User
 ```coffee
 zendesk createUser name:'name'
+{"id": id,"url": "url for user","name": "user name","alias": "alias name","created_at": "2019-08-09T15:17:19Z","updated_at": "2019-08-09T15:17:19Z","active": true,"verified": false,  "shared": false,"shared_agent": false,"locale": "en-US","locale_id": 1,"time_zone": "Eastern Time (US & Canada)","email": "abc@example.com","phone": "+911234567890","details": "some details about user","notes": "Any notes you want to store about the user","role": "end-user","moderator": false,
+"ticket_restriction": "requested","only_private_comments": false,"restricted_agent": true,"suspended": false}
 ```
 ##### Create Ticket
 ```coffee
 zendesk createTicket subject:'subject' description:'description' requesterId:'requesterId'
+{"id": id,"url": "ticket url","external_id": "","type": "task","subject": "OMG Ticket", "raw_subject": "OMG Ticket","description": "ticket from OMG","priority": "high","status": "new",  "recipient": "abc@example.com","requester_id": requester_id,"submitter_id": submitter_id,  "group_id": group_id,"has_incidents": false,"via": {"via object"},"created_at": "2019-08-09T15:20:35Z","updated_at": "2019-08-09T15:20:35Z","brand_id": brand_id}
 ```
 ##### List All Tickets
 ```coffee
 zendesk listTicket  sortBy:'sortBy'
+{"Comments": null,"Tickets": ["List of Tickets"],"Users": null,"Groups": null,"Audits": null,  "NextPage": null,"PreviousPage": null,"Count": Ticket Count}
 ```
 ##### Delete Ticket
 ```coffee
 zendesk deleteTicket  ticketId:'ticketId'
+{"success": true,"message": "Ticket deleted successfully","statusCode": 200}
 ```
 
 Curious to [learn more](https://docs.storyscript.io/)?
