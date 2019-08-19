@@ -150,7 +150,7 @@ actions:
       dueAt:
         type: string
         in: requestBody
-        help: If this is a ticket of type "task" it has a due date. Due date format uses ISO 8601 format.
+        help: If this is a ticket of type "task" it has a due date. Due date format uses "2019-11-02T15:04:05" ISO 8601 format.
       brandId:
         type: int
         in: requestBody

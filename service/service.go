@@ -2,12 +2,12 @@ package service
 
 import (
 	"encoding/json"
-	//"fmt"
 	zendesk "github.com/MEDIGO/go-zendesk/zendesk"
 	"github.com/aws/aws-sdk-go/aws"
 	result "github.com/heaptracetechnology/zendesk/result"
 	"net/http"
 	"os"
+	"time"
 )
 
 //User struct
@@ -59,6 +59,8 @@ type Message struct {
 	Message    string `json:"message"`
 	StatusCode int    `json:"statusCode"`
 }
+
+const layout = "2006-01-02T15:04:05"
 
 //CreateUser Zendesk
 func CreateUser(responseWriter http.ResponseWriter, request *http.Request) {
@@ -129,6 +131,16 @@ func CreateTicket(responseWriter http.ResponseWriter, request *http.Request) {
 		return
 	}
 
+	var dueDate time.Time
+	var dueErr error
+	if param.DueAt != "" {
+		dueDate, dueErr = time.Parse(layout, param.DueAt)
+		if dueErr != nil {
+			result.WriteErrorResponseString(responseWriter, dueErr.Error())
+			return
+		}
+	}
+
 	ticketDetails := zendesk.Ticket{
 		ExternalID:  aws.String(param.ExternalID),
 		Type:        aws.String(param.Type),
@@ -139,7 +151,7 @@ func CreateTicket(responseWriter http.ResponseWriter, request *http.Request) {
 		Status:      aws.String(param.Status),
 		Recipient:   aws.String(param.Recipient),
 		RequesterID: aws.Int64(param.RequesterID),
-		//DueAt:            aws.Time(param.DueAt),
+		DueAt:       aws.Time(dueDate),
 	}
 
 	newTicket, ticketErr := client.CreateTicket(&ticketDetails)
